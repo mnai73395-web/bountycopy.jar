@@ -65,9 +65,9 @@ public class BountyHighlighter implements ClientModInitializer {
             });
 
             // Middle click = copy name. Returning false cancels the vanilla click.
-            ScreenMouseEvents.allowMouseClick(screen).register((s, mx, my, button) -> {
-                if (button != 2) return true;
-                Slot slot = ((HandledScreenAccessor) hs).bh$getSlotAt(mx, my);
+                      ScreenMouseEvents.allowMouseClick(screen).register((s, click) -> {
+                if (click.button() != 2) return true;
+                Slot slot = ((HandledScreenAccessor) hs).bh$getSlotAt(click.x(), click.y());
                 String name = slot == null ? null : nameOf(slot.getStack());
                 if (name == null) return true;
                 MinecraftClient mc = MinecraftClient.getInstance();
