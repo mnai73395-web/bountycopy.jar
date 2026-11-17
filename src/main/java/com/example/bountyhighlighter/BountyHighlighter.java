@@ -5,7 +5,6 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -25,7 +24,7 @@ import java.util.regex.Pattern;
 /**
  * Client-side only. Reads the Bounties GUI you already have open, remembers when
  * YOUR client first saw each player, and tints that slot by age.
- * Middle-click a head to copy the name. Ctrl + middle-click prints debug info to chat.
+ * Middle-click a head to copy the name. Right-click prints debug info to chat.
  */
 public class BountyHighlighter implements ClientModInitializer {
     static final long GREEN_UNTIL_MIN  = 5;   // < 5 min   -> green
@@ -71,16 +70,18 @@ public class BountyHighlighter implements ClientModInitializer {
                 });
             });
 
-            // Middle click = copy name. Ctrl + middle click = print debug info. Cancels the vanilla click.
+            // Middle click = copy name. Right click = print debug info. Cancels the vanilla click.
             ScreenMouseEvents.allowMouseClick(screen).register((s, click) -> {
-                if (click.button() != 2) return true;
+                int btn = click.button();
+                if (btn != 2 && btn != 1) return true;
                 Slot slot = ((HandledScreenAccessor) hs).bh$getSlotAt(click.x(), click.y());
                 if (slot == null || slot.getStack().isEmpty()) return true;
                 MinecraftClient mc = MinecraftClient.getInstance();
                 ItemStack stack = slot.getStack();
                 String name = nameOf(stack);
 
-                if (Screen.hasControlDown() && mc.player != null) {
+                if (btn == 1) {
+                    if (mc.player == null) return false;
                     mc.player.sendMessage(Text.literal("[BH] item name: " + stack.getName().getString()
                             + " | detected: " + name), false);
                     List<Text> tip = stack.getTooltip(Item.TooltipContext.DEFAULT, mc.player, TooltipType.BASIC);
