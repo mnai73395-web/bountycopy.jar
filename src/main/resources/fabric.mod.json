@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "bountyhighlighter",
+  "version": "1.0.0",
+  "name": "Bounty Highlighter",
+  "description": "Colors /bounty entries by how long ago you first saw them and lets you middle-click a head to copy the player name.",
+  "authors": ["YourName"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": { "client": ["com.example.bountyhighlighter.BountyHighlighter"] },
+  "mixins": ["bountyhighlighter.mixins.json"],
+  "depends": { "fabricloader": ">=0.16.0", "fabric-api": "*", "minecraft": "~1.21.11" }
+}
